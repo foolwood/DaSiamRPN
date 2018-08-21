@@ -20,6 +20,11 @@ try:
 except ImportError:
     TRAX = False
 
+try:
+    xrange          # Python 2
+except NameError:
+    xrange = range  # Python 3
+
 Rectangle = collections.namedtuple('Rectangle', ['x', 'y', 'width', 'height'])
 Point = collections.namedtuple('Point', ['x', 'y'])
 Polygon = collections.namedtuple('Polygon', ['points'])
