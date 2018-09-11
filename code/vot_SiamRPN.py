@@ -26,7 +26,7 @@ net.eval().cuda()
 # warm up
 for i in range(10):
     net.temple(torch.autograd.Variable(torch.FloatTensor(1, 3, 127, 127)).cuda())
-    net(torch.autograd.Variable(torch.FloatTensor(1, 3, 255, 255)).cuda())
+    net(torch.autograd.Variable(torch.FloatTensor(1, 3, 271, 271)).cuda())
 
 # start to track
 handle = vot.VOT("polygon")
