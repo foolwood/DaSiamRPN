@@ -99,8 +99,11 @@ def rect_2_cxy_wh(rect):
 
 
 def get_axis_aligned_bbox(region):
-    region = np.array([region[0][0][0], region[0][0][1], region[0][1][0], region[0][1][1],
-                       region[0][2][0], region[0][2][1], region[0][3][0], region[0][3][1]])
+    try:
+        region = np.array([region[0][0][0], region[0][0][1], region[0][1][0], region[0][1][1],
+                           region[0][2][0], region[0][2][1], region[0][3][0], region[0][3][1]])
+    except:
+        region = np.array(region)
     cx = np.mean(region[0::2])
     cy = np.mean(region[1::2])
     x1 = min(region[0::2])

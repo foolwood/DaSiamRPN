@@ -129,7 +129,7 @@ def SiamRPN_init(im, target_pos, target_sz, net):
 
         p.score_size = (p.instance_size - p.exemplar_size) / p.total_stride + 1
 
-    p.anchor = generate_anchor(p.total_stride, p.scales, p.ratios, p.score_size)
+    p.anchor = generate_anchor(p.total_stride, p.scales, p.ratios, int(p.score_size))
 
     avg_chans = np.mean(im, axis=(0, 1))
 

@@ -20,8 +20,9 @@ Zheng Zhu<sup>\*</sup>, Qiang Wang<sup>\*</sup>, Bo Li<sup>\*</sup>, Wei Wu, Jun
 
 **DaSiamRPN** improves the performances of SiamRPN by (1) introducing an effective sampling strategy to control the imbalanced sample distribution, (2) designing a novel distractor-aware module to perform incremental learning, (3) making a long-term tracking extension. [ECCV2018](https://arxiv.org/pdf/1808.06048.pdf). (Slides at [VOT-18 Real-time challenge winners talk](https://drive.google.com/open?id=1dsEI2uYHDfELK0CW2xgv7R4QdCs6lwfr))
 
-<img src='votresult.png' width='800'>
-
+<div align="center">
+  <img src="votresult.png" width="700px" />
+</div>
 
 ## Prerequisites
 
@@ -56,6 +57,32 @@ All results can be downloaded from [Google Drive](https://drive.google.com/drive
 | <sub> **SiamRPN** </br> CVPR2017 </sub> | <sub>0.58 / 1.13 / 0.349<sub> | <sub>0.56 / 0.26 / 0.344<sub> | <sub>0.49 / 0.46 / 0.244<sub> | <sub>81.9 / 85.0<sub> | <sub>0.527 / 0.748<sub> | <sub>0.454 / 0.617<sub> |
 | <sub> **DaSiamRPN** </br> ECCV2018 </sub> | <sub>**0.63** / **0.66** / **0.446**<sub> | <sub>**0.61** / **0.22** / **0.411**<sub> | <sub>0.56 / 0.34 / 0.326<sub> | <sub>**86.5** / **88.0**<sub> | <sub>**0.586** / **0.796**<sub> | <sub>**0.617** / **0.838**<sub> |
 | <sub> **DaSiamRPN** </br> VOT2018 </sub> | <sub>-<sub> | <sub>-<sub>  | <sub>**0.59** / **0.28** / **0.383**<sub> | <sub>-<sub> | <sub>-<sub> | <sub>-<sub> |
+
+
+# Demo and Test OTB2015
+<div align="center">
+  <img src="code/data/bag.gif" width="400px" />
+</div>
+
+- To reproduce the reuslts on paper, the pretrained model can be downloaded from [Google Drive](https://drive.google.com/open?id=1BtIkp5pB6aqePQGlMb2_Z7bfPy6XEj6H): `SiamRPNOTB.model`. <br />
+:zap: :zap: This model is the **fastest**(~200fps) Siamese Tracker with AUC of 0.655 on OTB2015. :zap: :zap: 
+
+- You must download OTB2015 dataset (download [script](code/data/get_otb_data.sh)) at frist.
+
+A simple test example.
+
+```
+cd code
+python demo.py
+```
+
+If you want to test the performance on OTB2015, please using the follwing command.
+
+```
+cd code
+python test_otb.py
+python eval_otb.py OTB2015 "Siam*" 0 1
+```
 
 
 # License
