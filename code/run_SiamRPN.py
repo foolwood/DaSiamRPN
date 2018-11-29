@@ -17,6 +17,7 @@ def generate_anchor(total_stride, scales, ratios, score_size):
     size = total_stride * total_stride
     count = 0
     for ratio in ratios:
+        # ws = int(np.sqrt(size * 1.0 / ratio))
         ws = int(np.sqrt(size / ratio))
         hs = int(ws * ratio)
         for scale in scales:
@@ -54,6 +55,13 @@ class TrackerConfig(object):
     penalty_k = 0.055
     window_influence = 0.42
     lr = 0.295
+    # adaptive change search region #
+    adaptive = True
+
+    def update(self, cfg):
+        for k, v in cfg.items():
+            setattr(self, k, v)
+        self.score_size = (self.instance_size - self.exemplar_size) / self.total_stride + 1
 
 
 def tracker_eval(net, x_crop, target_pos, target_sz, window, scale_z, p):
@@ -109,15 +117,17 @@ def tracker_eval(net, x_crop, target_pos, target_sz, window, scale_z, p):
 def SiamRPN_init(im, target_pos, target_sz, net):
     state = dict()
     p = TrackerConfig()
+    p.update(net.cfg)
     state['im_h'] = im.shape[0]
     state['im_w'] = im.shape[1]
 
-    if ((target_sz[0] * target_sz[1]) / float(state['im_h'] * state['im_w'])) < 0.004:
-        p.instance_size = 287  # small object big search region
-    else:
-        p.instance_size = 271
+    if p.adaptive:
+        if ((target_sz[0] * target_sz[1]) / float(state['im_h'] * state['im_w'])) < 0.004:
+            p.instance_size = 287  # small object big search region
+        else:
+            p.instance_size = 271
 
-    p.score_size = (p.instance_size - p.exemplar_size) / p.total_stride + 1
+        p.score_size = (p.instance_size - p.exemplar_size) / p.total_stride + 1
 
     p.anchor = generate_anchor(p.total_stride, p.scales, p.ratios, p.score_size)
 
