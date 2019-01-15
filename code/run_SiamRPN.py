@@ -79,12 +79,12 @@ def tracker_eval(net, x_crop, target_pos, target_sz, window, scale_z, p):
         return np.maximum(r, 1./r)
 
     def sz(w, h):
-        pad = (w + h) * 0.5
+        pad = (w + h) * p.context_amount
         sz2 = (w + pad) * (h + pad)
         return np.sqrt(sz2)
 
     def sz_wh(wh):
-        pad = (wh[0] + wh[1]) * 0.5
+        pad = (wh[0] + wh[1]) * p.context_amount
         sz2 = (wh[0] + pad) * (wh[1] + pad)
         return np.sqrt(sz2)
 
