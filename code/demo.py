@@ -13,10 +13,13 @@ from net import SiamRPNvot
 from run_SiamRPN import SiamRPN_init, SiamRPN_track
 from utils import get_axis_aligned_bbox, cxy_wh_2_rect
 
+# get supported device
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
 # load net
 net = SiamRPNvot()
-net.load_state_dict(torch.load(join(realpath(dirname(__file__)), 'SiamRPNVOT.model')))
-net.eval().cuda()
+net.load_state_dict(torch.load(join(realpath(dirname(__file__)), 'SiamRPNVOT.model'), map_location=device))
+net.eval().to(device)
 
 # image and init box
 image_files = sorted(glob.glob('./bag/*.jpg'))
@@ -26,14 +29,14 @@ init_rbox = [334.02,128.36,438.19,188.78,396.39,260.83,292.23,200.41]
 # tracker init
 target_pos, target_sz = np.array([cx, cy]), np.array([w, h])
 im = cv2.imread(image_files[0])  # HxWxC
-state = SiamRPN_init(im, target_pos, target_sz, net)
+state = SiamRPN_init(im, target_pos, target_sz, net, device)
 
 # tracking and visualization
 toc = 0
 for f, image_file in enumerate(image_files):
     im = cv2.imread(image_file)
     tic = cv2.getTickCount()
-    state = SiamRPN_track(state, im)  # track
+    state = SiamRPN_track(state, im, device)  # track
     toc += cv2.getTickCount()-tic
     res = cxy_wh_2_rect(state['target_pos'], state['target_sz'])
     res = [int(l) for l in res]

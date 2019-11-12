@@ -114,7 +114,7 @@ def tracker_eval(net, x_crop, target_pos, target_sz, window, scale_z, p):
     return target_pos, target_sz, score[best_pscore_id]
 
 
-def SiamRPN_init(im, target_pos, target_sz, net):
+def SiamRPN_init(im, target_pos, target_sz, net, device="cuda:0"):
     state = dict()
     p = TrackerConfig()
     p.update(net.cfg)
@@ -140,7 +140,7 @@ def SiamRPN_init(im, target_pos, target_sz, net):
     z_crop = get_subwindow_tracking(im, target_pos, p.exemplar_size, s_z, avg_chans)
 
     z = Variable(z_crop.unsqueeze(0))
-    net.temple(z.cuda())
+    net.temple(z.to(device))
 
     if p.windowing == 'cosine':
         window = np.outer(np.hanning(p.score_size), np.hanning(p.score_size))
@@ -157,7 +157,7 @@ def SiamRPN_init(im, target_pos, target_sz, net):
     return state
 
 
-def SiamRPN_track(state, im):
+def SiamRPN_track(state, im, device="cuda:0"):
     p = state['p']
     net = state['net']
     avg_chans = state['avg_chans']
@@ -176,7 +176,7 @@ def SiamRPN_track(state, im):
     # extract scaled crops for search region x at previous target position
     x_crop = Variable(get_subwindow_tracking(im, target_pos, p.instance_size, round(s_x), avg_chans).unsqueeze(0))
 
-    target_pos, target_sz, score = tracker_eval(net, x_crop.cuda(), target_pos, target_sz * scale_z, window, scale_z, p)
+    target_pos, target_sz, score = tracker_eval(net, x_crop.to(device), target_pos, target_sz * scale_z, window, scale_z, p)
     target_pos[0] = max(0, min(state['im_w'], target_pos[0]))
     target_pos[1] = max(0, min(state['im_h'], target_pos[1]))
     target_sz[0] = max(10, min(state['im_w'], target_sz[0]))
