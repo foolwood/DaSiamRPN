@@ -30,7 +30,7 @@ def generate_anchor(total_stride, scales, ratios, score_size):
             count += 1
 
     anchor = np.tile(anchor, score_size * score_size).reshape((-1, 4))
-    ori = - (score_size / 2) * total_stride
+    ori = - (score_size // 2) * total_stride
     xx, yy = np.meshgrid([ori + total_stride * dx for dx in range(score_size)],
                          [ori + total_stride * dy for dy in range(score_size)])
     xx, yy = np.tile(xx.flatten(), (anchor_num, 1)).flatten(), \
@@ -46,7 +46,7 @@ class TrackerConfig(object):
     exemplar_size = 127  # input z size
     instance_size = 271  # input x size (search region)
     total_stride = 8
-    score_size = (instance_size-exemplar_size)/total_stride+1
+    score_size = (instance_size-exemplar_size)//total_stride+1
     context_amount = 0.5  # context amount for the exemplar
     ratios = [0.33, 0.5, 1, 2, 3]
     scales = [8, ]
@@ -61,7 +61,7 @@ class TrackerConfig(object):
     def update(self, cfg):
         for k, v in cfg.items():
             setattr(self, k, v)
-        self.score_size = (self.instance_size - self.exemplar_size) / self.total_stride + 1
+        self.score_size = (self.instance_size - self.exemplar_size) // self.total_stride + 1
 
 
 def tracker_eval(net, x_crop, target_pos, target_sz, window, scale_z, p):
@@ -169,7 +169,7 @@ def SiamRPN_track(state, im):
     hc_z = target_sz[0] + p.context_amount * sum(target_sz)
     s_z = np.sqrt(wc_z * hc_z)
     scale_z = p.exemplar_size / s_z
-    d_search = (p.instance_size - p.exemplar_size) / 2
+    d_search = (p.instance_size - p.exemplar_size) // 2
     pad = d_search / scale_z
     s_x = s_z + 2 * pad
 

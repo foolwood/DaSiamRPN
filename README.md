@@ -1,3 +1,5 @@
+# While the original repository works in Python 2.x, the code in this repository works in Python 3.x.
+***
 :trophy:News: **We won the VOT-18 real-time challenge**
 
 :trophy:News: **We won the second place in the VOT-18 long-term challenge**
